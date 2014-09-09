@@ -9,8 +9,10 @@ namespace WpfApplication1.Services
 {
     internal class Optimization
     {
+        //Dll import from wre-ensimag
         const string pathToDll = @"Path\To\x64\Or\X86\wre-ensimag-c-4.1.dll";
-
+        
+        //Calculte the co-variance matrice
         [DllImport(pathToDll, EntryPoint = "WREmodelingCov", CallingConvention = CallingConvention.Cdecl)]
         public static extern int NORMmodelingCov(
             ref int returnsSize,
@@ -19,7 +21,8 @@ namespace WpfApplication1.Services
             double[,] covMatrix,
             ref int info
         );
-
+        
+        //Use to solve portfolio optimization
         [DllImport(pathToDll, EntryPoint = "WREallocIT", CallingConvention = CallingConvention.Cdecl)]
         public static extern int OptWeights(
             ref int nbAssets,
@@ -38,6 +41,8 @@ namespace WpfApplication1.Services
             ref int info
         );
 
+        //Private enum use to swtich the measure use
+        //By default we use a quadratique measure
         private Measure _measure;
 
         public Optimization()
@@ -45,7 +50,25 @@ namespace WpfApplication1.Services
             _measure = Measure.MinStdDev;
 
         }
+        public double[] Optimize(double[,] returns,double mu)
+        {
 
+           
+            double[,] CovarianceMatrix= computeCovarianceMatrix(returns);
+            double[] expectedReturns= new double[returns.GetLength(1)];
+            computeOptWeights(CovarianceMatrix, expectedReturns, mu);
+
+            return null;
+
+        }
+
+
+
+        /*
+         * Compute the covariance matrix
+         * INPUT: 
+         * OUTPUT: 
+         */
         public double[,] computeCovarianceMatrix(double[,] returns)
         {
             int dataSize = returns.GetLength(0);
@@ -55,14 +78,20 @@ namespace WpfApplication1.Services
             int returnFromNorm = NORMmodelingCov(ref dataSize, ref nbAssets, returns, covMatrix, ref info);
             if (returnFromNorm != 0)
             {
-
-                throw new Exception(); // Check out what went wrong here
+                // Check out what went wrong here
+                throw new Exception(); 
             }
             return covMatrix;
         }
 
+        /*
+         * Compute the optimals weight
+         * INPUT: 
+         * OUTPUT: 
+         */
         public double[] computeOptWeights(double[,] covMatrix, double[] expectedReturns, double mu)
         {
+            //Initialize all the parameters
             int nbAssets = covMatrix.GetLength(0)-1;
             double[] benchmarkCov= new double[nbAssets];
             double benchmarkExpectedReturn;
@@ -95,12 +124,14 @@ namespace WpfApplication1.Services
             int info = 0;
 
             double[] optimalWeights = new double[nbAssets];
+
+            //Call the function from wre
             int returnFromOpt = OptWeights(ref nbAssets, cov, shareExpectedReturns, benchmarkCov, ref benchmarkExpectedReturn, ref nbEqConst, ref nbIneqConst, C, b, minWeights, maxWeights, ref mu, optimalWeights, ref info);
 
              if (returnFromOpt != 0)
             {
-
-                throw new Exception(); // Check out what went wrong here
+                // Check out what went wrong here
+                throw new Exception(); 
             }
             return optimalWeights;
         }
