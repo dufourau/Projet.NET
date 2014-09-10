@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApplication1", "WpfApplication1\WpfApplication1.csproj", "{8D20FBD1-8AFB-4EC5-933C-0561AF321E47}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{D32DE53B-2A83-498F-B7D7-3623EB99B4AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testbis", "testbis\testbis.csproj", "{CB9EEAA8-3CEB-4FCD-A04C-C084B5870F86}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServicesTests", "UnitTestProject1\ServicesTests.csproj", "{E9CEA91F-E0BE-4E9F-8381-AA2E04F66966}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{D32DE53B-2A83-498F-B7D7-3623EB99B4AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D32DE53B-2A83-498F-B7D7-3623EB99B4AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D32DE53B-2A83-498F-B7D7-3623EB99B4AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB9EEAA8-3CEB-4FCD-A04C-C084B5870F86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB9EEAA8-3CEB-4FCD-A04C-C084B5870F86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB9EEAA8-3CEB-4FCD-A04C-C084B5870F86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB9EEAA8-3CEB-4FCD-A04C-C084B5870F86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9CEA91F-E0BE-4E9F-8381-AA2E04F66966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9CEA91F-E0BE-4E9F-8381-AA2E04F66966}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9CEA91F-E0BE-4E9F-8381-AA2E04F66966}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9CEA91F-E0BE-4E9F-8381-AA2E04F66966}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -26,22 +26,46 @@ public class Share
         private set { _ticker = value; }
     }
 
+    public List<Rate> _Rates
+    {
+        get { return _rates; }
+        private set { _rates = value; }
+    }
+
+
     /// <summary>
     /// ajoute (en fin de liste) un cours pour l'action
     /// </summary>
-    /// <param name="date"></param>
-    /// <param name="rate"></param>
+    /// <param name="date">date du cours</param>
+    /// <param name="rate">cours</param>
     public void addRate(DateTime date, double rate)
     {
         this._rates.Add(new Rate(date, rate));
     }
 
-    public float getRate(DateTime date)
+    /// <summary>
+    /// donne le cours de laction pour une date donnée
+    /// </summary>
+    /// <param name="date"></param>
+    /// <returns></returns>
+    public double getRate(DateTime date)
     {
-        //return this.rates.Find(   //(x => x.date = date, x => x.action = this.name);
-        return 0;
+        double res = 0;
+        foreach (Rate r in this._rates)
+        {
+            if (r._Date == date)
+            {
+                res = r._Rate;
+                return res;
+            }
+        }
+        return res;
     }
 
+    /// <summary>
+    /// donne tous les taux concernant cette action par ordre chronologique
+    /// </summary>
+    /// <returns></returns>
     public List<double> GetAllRates()
     {
         List<double> res = new List<double>();

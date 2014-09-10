@@ -9,6 +9,7 @@ namespace WpfApplication1.Services
 {
     internal class Optimization
     {
+
         //Dll import from wre-ensimag
         const string pathToDll = @"x64\wre-ensimag-c-4.1.dll";
         
@@ -21,6 +22,7 @@ namespace WpfApplication1.Services
             double[,] covMatrix,
             ref int info
         );
+
         
         //Use to solve portfolio optimization
         [DllImport(pathToDll, EntryPoint = "WREallocIT", CallingConvention = CallingConvention.Cdecl)]
@@ -96,6 +98,7 @@ namespace WpfApplication1.Services
             return finalResult;
         }
         
+
         /// <summary>
         ///  Main function            
         ///  Call all the computing funcions and link he results     
@@ -122,12 +125,14 @@ namespace WpfApplication1.Services
         }
 
 
+
         /// <summary>
         /// Compute the covariance matrix
         /// </summary>
         /// <param name="returns">matrix containings all the assets on the row (including the portfolio itself) and all the date on the columns</param>
         /// <returns>covariance matrix for the assets and the covariance vector of the portfolio will all the assets</returns> 
         public double[,] ComputeCovarianceMatrix(double[,] returns)
+
         {
             int dataSize = returns.GetLength(0);
             int nbAssets = returns.GetLength(1);
@@ -136,6 +141,7 @@ namespace WpfApplication1.Services
             int returnFromNorm = NORMmodelingCov(ref dataSize, ref nbAssets, returns, covMatrix, ref info);
             if (returnFromNorm != 0)
             {
+
                 // Check out what went wrong here
                 throw new Exception(); 
             }
@@ -150,6 +156,7 @@ namespace WpfApplication1.Services
         /// <param name="mu">estimate profit</param>
         /// <returns>optimal weight</returns>
         public double[] ComputeOptWeights(double[,] covMatrix, double[] expectedReturns, double mu)
+
         {
             //Initialize all the parameters
             int nbAssets = covMatrix.GetLength(0)-1;
@@ -184,14 +191,13 @@ namespace WpfApplication1.Services
             int info = 0;
 
             double[] optimalWeights = new double[nbAssets];
-
             //Call the function from wre
             int returnFromOpt = OptWeights(ref nbAssets, cov, shareExpectedReturns, benchmarkCov, ref benchmarkExpectedReturn, ref nbEqConst, ref nbIneqConst, C, b, minWeights, maxWeights, ref mu, optimalWeights, ref info);
 
              if (returnFromOpt != 0)
             {
-                // Check out what went wrong here
-                throw new Exception(); 
+
+                throw new Exception(); // Check out what went wrong here
             }
             return optimalWeights;
         }
