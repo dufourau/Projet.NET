@@ -9,8 +9,15 @@ namespace WpfApplication1.Services
 {
     internal class Optimization
     {
+<<<<<<< HEAD
         const string pathToDll = @"Path\To\x64\Or\X86\wre-ensimag-c-4.1.dll";
 
+=======
+        //Dll import from wre-ensimag
+        const string pathToDll = @"Path\To\x64\Or\X86\wre-ensimag-c-4.1.dll";
+        
+        //Calculte the co-variance matrice
+>>>>>>> 1a7cabe2d6d985c584c9d916840ad289fafbaa40
         [DllImport(pathToDll, EntryPoint = "WREmodelingCov", CallingConvention = CallingConvention.Cdecl)]
         public static extern int NORMmodelingCov(
             ref int returnsSize,
@@ -19,7 +26,12 @@ namespace WpfApplication1.Services
             double[,] covMatrix,
             ref int info
         );
+<<<<<<< HEAD
 
+=======
+        
+        //Use to solve portfolio optimization
+>>>>>>> 1a7cabe2d6d985c584c9d916840ad289fafbaa40
         [DllImport(pathToDll, EntryPoint = "WREallocIT", CallingConvention = CallingConvention.Cdecl)]
         public static extern int OptWeights(
             ref int nbAssets,
@@ -38,6 +50,11 @@ namespace WpfApplication1.Services
             ref int info
         );
 
+<<<<<<< HEAD
+=======
+        //Private enum use to swtich the measure use
+        //By default we use a quadratique measure
+>>>>>>> 1a7cabe2d6d985c584c9d916840ad289fafbaa40
         private Measure _measure;
 
         public Optimization()
@@ -46,6 +63,31 @@ namespace WpfApplication1.Services
 
         }
 
+<<<<<<< HEAD
+=======
+        /// <summary>
+        ///  Main function            
+        ///  Call all the computing funcions and link he results
+        ///  INPUT: >> double [,] returns: matrix containings all the assets on the row (including the portfolio itself) and all the date on the columns
+        ///         >> double mu : desired profit made with the portfolio       
+        ///  OUTPUT: double array containing optimized weights
+        /// </summary>
+        public double[] Optimize(double[,] returns,double mu)
+        {          
+            double[,] CovarianceMatrix= computeCovarianceMatrix(returns);
+            double[] expectedReturns= new double[returns.GetLength(1)];
+            computeOptWeights(CovarianceMatrix, expectedReturns, mu);
+            return null;
+        }
+
+
+
+        /*
+         * Compute the covariance matrix
+         * INPUT: 
+         * OUTPUT: 
+         */
+>>>>>>> 1a7cabe2d6d985c584c9d916840ad289fafbaa40
         public double[,] computeCovarianceMatrix(double[,] returns)
         {
             int dataSize = returns.GetLength(0);
@@ -55,14 +97,30 @@ namespace WpfApplication1.Services
             int returnFromNorm = NORMmodelingCov(ref dataSize, ref nbAssets, returns, covMatrix, ref info);
             if (returnFromNorm != 0)
             {
+<<<<<<< HEAD
 
                 throw new Exception(); // Check out what went wrong here
+=======
+                // Check out what went wrong here
+                throw new Exception(); 
+>>>>>>> 1a7cabe2d6d985c584c9d916840ad289fafbaa40
             }
             return covMatrix;
         }
 
+<<<<<<< HEAD
         public double[] computeOptWeights(double[,] covMatrix, double[] expectedReturns, double mu)
         {
+=======
+        /*
+         * Compute the optimals weight
+         * INPUT: 
+         * OUTPUT: 
+         */
+        public double[] computeOptWeights(double[,] covMatrix, double[] expectedReturns, double mu)
+        {
+            //Initialize all the parameters
+>>>>>>> 1a7cabe2d6d985c584c9d916840ad289fafbaa40
             int nbAssets = covMatrix.GetLength(0)-1;
             double[] benchmarkCov= new double[nbAssets];
             double benchmarkExpectedReturn;
@@ -95,12 +153,22 @@ namespace WpfApplication1.Services
             int info = 0;
 
             double[] optimalWeights = new double[nbAssets];
+<<<<<<< HEAD
+=======
+
+            //Call the function from wre
+>>>>>>> 1a7cabe2d6d985c584c9d916840ad289fafbaa40
             int returnFromOpt = OptWeights(ref nbAssets, cov, shareExpectedReturns, benchmarkCov, ref benchmarkExpectedReturn, ref nbEqConst, ref nbIneqConst, C, b, minWeights, maxWeights, ref mu, optimalWeights, ref info);
 
              if (returnFromOpt != 0)
             {
+<<<<<<< HEAD
 
                 throw new Exception(); // Check out what went wrong here
+=======
+                // Check out what went wrong here
+                throw new Exception(); 
+>>>>>>> 1a7cabe2d6d985c584c9d916840ad289fafbaa40
             }
             return optimalWeights;
         }
