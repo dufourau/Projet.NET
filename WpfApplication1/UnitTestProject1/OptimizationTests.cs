@@ -67,12 +67,12 @@ namespace ServicesTests
         [TestMethod]
         public void TestcomputeOptWeights()
         {
-
+            Optimization opt = new Optimization();
             double[,] returns = new double[2,2];
-            double[,] covMatrix = Optimization.ComputeCovarianceMatrix(returns);
+            double[,] covMatrix = opt.ComputeCovarianceMatrix(returns);
             double[] expectedReturns = {0};
             double mu = 0;
-            double[] OptW = Optimization.ComputeOptWeights(covMatrix, expectedReturns, mu);
+            double[] OptW = opt.ComputeOptWeights(covMatrix, expectedReturns, mu);
         }
     }
 }
