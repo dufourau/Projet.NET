@@ -50,16 +50,20 @@ namespace WpfApplication1.Services
             _measure = Measure.MinStdDev;
 
         }
-        public double[] Optimize(double[,] returns,double mu)
-        {
 
-           
+        /// <summary>
+        ///  Main function            
+        ///  Call all the computing funcions and link he results
+        ///  INPUT: >> double [,] returns: matrix containings all the assets on the row (including the portfolio itself) and all the date on the columns
+        ///         >> double mu : desired profit made with the portfolio       
+        ///  OUTPUT: double array containing optimized weights
+        /// </summary>
+        public double[] Optimize(double[,] returns,double mu)
+        {          
             double[,] CovarianceMatrix= computeCovarianceMatrix(returns);
             double[] expectedReturns= new double[returns.GetLength(1)];
             computeOptWeights(CovarianceMatrix, expectedReturns, mu);
-
             return null;
-
         }
 
 
