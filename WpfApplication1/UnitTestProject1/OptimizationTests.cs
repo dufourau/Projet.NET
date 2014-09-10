@@ -69,10 +69,10 @@ namespace ServicesTests
         {
 
             double[,] returns = new double[2,2];
-            double[,] covMatrix = Optimization.computeCovarianceMatrix(returns);
+            double[,] covMatrix = Optimization.ComputeCovarianceMatrix(returns);
             double[] expectedReturns = {0};
             double mu = 0;
-            double[] OptW = Optimization.computeOptWeights(covMatrix, expectedReturns, mu);
+            double[] OptW = Optimization.ComputeOptWeights(covMatrix, expectedReturns, mu);
         }
     }
 }

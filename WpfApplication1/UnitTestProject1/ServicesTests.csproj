@@ -71,6 +71,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\WpfApplication1\WpfApplication1.csproj">
       <Project>{8d20fbd1-8afb-4ec5-933c-0561af321e47}</Project>
       <Name>WpfApplication1</Name>

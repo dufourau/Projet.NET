@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WpfApplication1.Services
 {
-    internal class Optimization
+    public class Optimization
     {
 
         //Dll import from wre-ensimag
