@@ -10,7 +10,7 @@ namespace WpfApplication1.Services
     internal class Optimization
     {
         //Dll import from wre-ensimag
-        const string pathToDll = @"Path\To\x64\Or\X86\wre-ensimag-c-4.1.dll";
+        const string pathToDll = @"x64\wre-ensimag-c-4.1.dll";
         
         //Calculte the co-variance matrice
         [DllImport(pathToDll, EntryPoint = "WREmodelingCov", CallingConvention = CallingConvention.Cdecl)]
@@ -50,30 +50,84 @@ namespace WpfApplication1.Services
             _measure = Measure.MinStdDev;
 
         }
+       
+        //TODO MOVE INTO THE RIGHT DIRECTORY
+        /// <summary>
+        /// Launch our tracker and return all the weight value 
+        /// </summary>
+        /// <param name="returns"></param>
+        /// <param name="durationTime"></param>
+        /// <param name="waitingTime"></param>
+        /// <returns></returns>
+        public double[,] Tracking(double[,] returns,int estimationTime,int waitingTime)
+        {
+            int dataSize= returns.GetLength(0);
+            int nbAssets= returns.GetLength(1)-1;
+            double [] optimizedWeights= new double[nbAssets];
+            // The final result: will contain the numbers of actions
+            double[,] finalResult= new double[dataSize,nbAssets];
+            // Matrix use to copy the current estimation data
+            double[,] estimationValues= new double[estimationTime,nbAssets+1];
+            // 
+            for (int i = estimationTime; i < dataSize; i += waitingTime)
+            {
+                //Copy the estimation period
+                for (int j = 0; j < estimationTime; j++)
+                {
+                    //Copy all assets
+                    //TODO create functions to copy lines
+                    for(int indexAsset= 0; indexAsset< nbAssets+1; indexAsset++){
+                        estimationValues[indexAsset, j] = returns[indexAsset, i - j];
+                    }   
 
+                }
+                //Calculate the optimized weight
+                optimizedWeights= Optimize(estimationValues, 0);
+
+                for (int j = i; j < i + waitingTime; j++ )
+                {
+                    for(int indexAsset= 0; indexAsset< nbAssets; indexAsset++){
+                        finalResult[indexAsset,j]= optimizedWeights[indexAsset];
+                    }
+                }
+                
+
+            }
+            return finalResult;
+        }
+        
         /// <summary>
         ///  Main function            
-        ///  Call all the computing funcions and link he results
-        ///  INPUT: >> double [,] returns: matrix containings all the assets on the row (including the portfolio itself) and all the date on the columns
-        ///         >> double mu : desired profit made with the portfolio       
-        ///  OUTPUT: double array containing optimized weights
+        ///  Call all the computing funcions and link he results     
         /// </summary>
+        /// <param name="returns">matrix containings all the assets on the row (including the portfolio itself) and all the date on the columns</param>
+        /// <param name="mu"> desired profit made with the portfolio</param>
+        /// <returns>double array containing optimized weights</returns>
         public double[] Optimize(double[,] returns,double mu)
         {          
-            double[,] CovarianceMatrix= computeCovarianceMatrix(returns);
+            double[,] CovarianceMatrix= ComputeCovarianceMatrix(returns);
             double[] expectedReturns= new double[returns.GetLength(1)];
-            computeOptWeights(CovarianceMatrix, expectedReturns, mu);
+            //We will calculate the rate mean of all rates and store in expectedReturns
+            for (int i = 0; i < returns.GetLength(0); i++ )
+            {
+                for (int j = 0; j < returns.GetLength(1); j++ )
+                {
+                    expectedReturns[i]+=  returns[i, j];
+                }
+                expectedReturns[i] = expectedReturns[i] / returns.GetLength(1); 
+            }
+                  
+            ComputeOptWeights(CovarianceMatrix, expectedReturns, mu);
             return null;
         }
 
 
-
-        /*
-         * Compute the covariance matrix
-         * INPUT: 
-         * OUTPUT: 
-         */
-        public double[,] computeCovarianceMatrix(double[,] returns)
+        /// <summary>
+        /// Compute the covariance matrix
+        /// </summary>
+        /// <param name="returns">matrix containings all the assets on the row (including the portfolio itself) and all the date on the columns</param>
+        /// <returns>covariance matrix for the assets and the covariance vector of the portfolio will all the assets</returns> 
+        public double[,] ComputeCovarianceMatrix(double[,] returns)
         {
             int dataSize = returns.GetLength(0);
             int nbAssets = returns.GetLength(1);
@@ -88,12 +142,14 @@ namespace WpfApplication1.Services
             return covMatrix;
         }
 
-        /*
-         * Compute the optimals weight
-         * INPUT: 
-         * OUTPUT: 
-         */
-        public double[] computeOptWeights(double[,] covMatrix, double[] expectedReturns, double mu)
+        /// <summary>
+        /// Compute the optimals weight
+        /// </summary>
+        /// <param name="covMatrix"> the covaiance matrix (all assets + portfolio) </param>
+        /// <param name="expectedReturns">vector of mean rate (all assets + portfolio)</param>
+        /// <param name="mu">estimate profit</param>
+        /// <returns>optimal weight</returns>
+        public double[] ComputeOptWeights(double[,] covMatrix, double[] expectedReturns, double mu)
         {
             //Initialize all the parameters
             int nbAssets = covMatrix.GetLength(0)-1;
