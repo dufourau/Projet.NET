@@ -1,11 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace testbis
 {
+    public struct correspondance
+    {
+       public string _name;
+       public string _ticker;
+
+        public correspondance(string name, string ticker)
+        {
+            _name = name;
+            _ticker = ticker;
+        }
+    }
+
     class Requete
     {
         /// <summary>
@@ -16,6 +29,26 @@ namespace testbis
         {
             using (DataDataContext dc = new DataDataContext())
             {
+
+                /*
+                //correspondances ticker/name
+                StreamReader monStreamReader = new StreamReader("Z:/Documents/Cours-3A/NET/Projet.Net/WpfApplication1/Correspondance.txt");
+                string ligne = monStreamReader.ReadLine();
+                char[] sep = { '\t' };
+                List<correspondance> donnees = new List<correspondance>();
+
+                while ((ligne = monStreamReader.ReadLine()) != null)
+                {
+                    //nom
+                    string[] tab;
+                    tab = ligne.Split(sep);
+
+
+                    donnees.Add(new correspondance(tab[0], tab[1]));
+                }
+
+                monStreamReader.Close();
+                */
 
                 //récupération de l'indice reference cac40
                 var cac = (from c in dc.HistoIndices
@@ -48,6 +81,11 @@ namespace testbis
                                  where v.name == t 
                                  select new {v.value, v.date};
 
+                   /* string name = (from d in donnees
+                                  where d._ticker == t
+                                  select d._name).Single().ToString();
+
+                    Share action = new Share(name, t);*/
                     Share action = new Share(null, t);
                     foreach (var v in valeur2)
                     {
@@ -56,6 +94,18 @@ namespace testbis
                     }
                     P.addAction(action,(double)1/(double)29);
                 }
+
+                
+
+
+
+
+
+
+
+
+
+
 
                 return P;
             }
