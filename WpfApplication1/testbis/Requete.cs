@@ -30,26 +30,30 @@ namespace testbis
             using (DataDataContext dc = new DataDataContext())
             {
 
-                /*
-                //correspondances ticker/name
-                StreamReader monStreamReader = new StreamReader("Z:/Documents/Cours-3A/NET/Projet.Net/WpfApplication1/Correspondance.txt");
-                string ligne = monStreamReader.ReadLine();
-                char[] sep = { '\t' };
+                Boolean b = false;
                 List<correspondance> donnees = new List<correspondance>();
-
-                while ((ligne = monStreamReader.ReadLine()) != null)
+                //correspondances ticker/name
+                if (File.Exists("Z:/Documents/Cours-3A/NET/Correspondances.txt"))
                 {
-                    //nom
-                    string[] tab;
-                    tab = ligne.Split(sep);
+
+                    StreamReader monStreamReader = new StreamReader("Z:/Documents/Cours-3A/NET/Correspondances.txt");
+                    string ligne = monStreamReader.ReadLine();
+                    char[] sep = { '\t' };
+                    
+
+                    while ((ligne = monStreamReader.ReadLine()) != null)
+                    {
+                        //nom
+                        string[] tab;
+                        tab = ligne.Split(sep);
 
 
-                    donnees.Add(new correspondance(tab[0], tab[1]));
+                        donnees.Add(new correspondance(tab[0], tab[1]));
+                    }
+
+                    monStreamReader.Close();
+                    b = true;
                 }
-
-                monStreamReader.Close();
-                */
-
                 //récupération de l'indice reference cac40
                 var cac = (from c in dc.HistoIndices
                            select c.name).Distinct().Single();
@@ -80,13 +84,19 @@ namespace testbis
                     var valeur2 = from v in dc.HistoComponents 
                                  where v.name == t 
                                  select new {v.value, v.date};
+                    Share action;
+                    if (b)
+                    {
+                        string name = (from d in donnees
+                                       where d._ticker == t
+                                       select d._name).Single().ToString();
 
-                   /* string name = (from d in donnees
-                                  where d._ticker == t
-                                  select d._name).Single().ToString();
-
-                    Share action = new Share(name, t);*/
-                    Share action = new Share(null, t);
+                        action = new Share(name, t);
+                    }
+                    else
+                    {
+                        action = new Share(null, t);
+                    }
                     foreach (var v in valeur2)
                     {
                         action.addRate(v.date, v.value);
